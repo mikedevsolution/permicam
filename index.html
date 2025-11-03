@@ -1,0 +1,196 @@
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Permicam - Vérification</title>
+
+    <link href="https://www.cartegrisecameroun.com/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://www.cartegrisecameroun.com/css/style.css" rel="stylesheet">
+    <link href="https://www.cartegrisecameroun.com/css/all.css" rel="stylesheet">
+    <link href="https://www.cartegrisecameroun.com/css/flaticon.css" rel="stylesheet">
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="https://www.cartegrisecameroun.com/favicon/favicon.ico">
+
+    <style>
+        /* Quelques styles pour gérer le chargement et les erreurs */
+        body { background-color: #f0f0fa; }
+        .ms-content-wrapper { max-width: 900px; margin: 20px auto; }
+        #status-message { padding: 20px; text-align: center; font-weight: bold; font-size: 1.1em; }
+        .status-loading { color: #007bff; }
+        .status-error { color: #dc3545; }
+    </style>
+</head>
+
+<body class="ms-body">
+    <main class="body-content">
+        <nav class="nav-background">
+            <img src="https://www.cartegrisecameroun.com/images/Driver_brand_new_logo.jpg" alt="logo" height="100%" width="100%">
+        </nav>
+
+        <div class="ms-content-wrapper">
+            <div class="row" style="justify-content:center;">
+                <div class="col-md-10">
+                    <div class="ms-panel">
+                        <div class="ms-panel-header">
+                            <div class="ms-header-text mb-0 pb-0" style=" text-align: center;">
+                                <h6>BIENVENUE SUR LE PORTAIL D'ENROLEMENT A LA DEMANDE DE PERMIS DE CONDUIRE ET BADGE</h6>
+                            </div>
+                        </div>
+                        <div class="ms-panel-body pb-2" id="main-content">
+                            <div class="ms-panel">
+                                <div class="ms-panel-header">
+                                    <div class=" d-flex justify-content-between">
+                                        <div class="ms-header-text">
+                                            <h6 style="font-weight:bold;">DEMANDE DE PERMIS DE CONDUIRE</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ms-panel-body p-0">
+                                    
+                                    <div id="status-message">
+                                        <span class="status-loading">Chargement des informations...</span>
+                                    </div>
+                                    
+                                    <div class="table-responsive" id="permis-data" style="display:none;">
+                                        <table class="table table-bordered mb-0">
+                                            <caption style="caption-side: top; margin-left: 10px; font-weight: bold; color: black">Recapitulatif de la demande</caption>
+                                            
+                                            <tbody>
+                                                <tr>
+                                                    <td style="font-weight:bold">Etat de la demande </td>
+                                                    <td style="width:50%">
+                                                        <span id="statut-demande" style="font-weight: bold; color: red;"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="col" colspan="2">Identité du detenteur</th>
+                                                </tr>
+                                            </tbody>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Photo</td>
+                                                    <td>
+                                                        <div class=" row col-sm-4">
+                                                            <img id="photo-permis" src="" style="width:120px; height:150px; background-color: #eee;">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Nom</td>
+                                                    <td><span id="nom" style="font-weight: bold"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Prénoms</td>
+                                                    <td><span id="prenoms" style="font-weight: bold"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Lieu de naissance</td>
+                                                    <td><span id="lieu-naissance" style="font-weight: bold"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Date de naissance</td>
+                                                    <td><span id="date-naissance" style="font-weight: bold"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Genre</td>
+                                                    <td><span id="genre" style="font-weight: bold"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Nationalité</td>
+                                                    <td><span id="nationalite" style="font-weight: bold"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Numéro de permis </td>
+                                                    <td><span id="num-permis" style="font-weight: bold;"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Numéro de capacité </td>
+                                                    <td><span id="num-capacite" style="font-weight: bold;"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Catégories du permis </td>
+                                                    <td><span id="categories" style="font-weight: bold;"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Date de création de la demande </td>
+                                                    <td><span id="date-creation" style="font-weight: bold;"></span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer_position " id="pied-de-page">
+            <p>Copyright © 2023 - All rights reserved - MINT - Cameroon</p>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            // 1. URL de votre API sur le serveur LWS
+            const apiUrl = "https://www.cartegrisecameroun.com/public/api/getPermisInfo.php";
+
+            // 2. Références aux éléments HTML
+            const statusMessageEl = document.getElementById("status-message");
+            const permisDataEl = document.getElementById("permis-data");
+            
+            // 3. Récupérer l'ID du permis depuis l'URL de cette page
+            const params = new URLSearchParams(window.location.search);
+            const permisId = params.get('id');
+
+            if (!permisId) {
+                statusMessageEl.innerHTML = '<span class="status-error">Erreur : Aucun identifiant de permis n\'a été fourni.</span>';
+                return;
+            }
+
+            // 4. Appeler l'API pour récupérer les données
+            fetch(apiUrl + '?id=' + permisId)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erreur réseau ou API non trouvée.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.permis) {
+                        // 5. Remplir les champs avec les données reçues
+                        const permis = data.permis;
+                        
+                        document.getElementById('statut-demande').textContent = permis.statut_demande || 'N/A';
+                        document.getElementById('photo-permis').src = permis.photo_url || '';
+                        document.getElementById('nom').textContent = permis.nom || 'N/A';
+                        document.getElementById('prenoms').textContent = permis.prenom || 'N/A';
+                        document.getElementById('lieu-naissance').textContent = permis.lieu_naissance || 'N/A';
+                        document.getElementById('date-naissance').textContent = permis.date_naissance || 'N/A';
+                        document.getElementById('genre').textContent = permis.genre || 'N/A';
+                        document.getElementById('nationalite').textContent = permis.nationalite || 'N/A';
+                        document.getElementById('num-permis').textContent = permis.num_permis || 'N/A';
+                        document.getElementById('num-capacite').textContent = permis.num_capacite || 'N/A';
+                        document.getElementById('categories').textContent = permis.categories || 'N/A';
+                        document.getElementById('date-creation').textContent = permis.date_creation || 'N/A';
+
+                        // 6. Afficher les données et cacher le message de chargement
+                        statusMessageEl.style.display = 'none';
+                        permisDataEl.style.display = 'block';
+
+                    } else {
+                        // Gérer les erreurs de l'API (ex: permis non trouvé)
+                        statusMessageEl.innerHTML = `<span class="status-error">Erreur : ${data.error || 'Impossible de récupérer les informations.'}</span>`;
+                    }
+                })
+                .catch(error => {
+                    // Gérer les erreurs de connexion
+                    console.error('Erreur de fetch:', error);
+                    statusMessageEl.innerHTML = '<span class="status-error">Erreur de connexion. Impossible de contacter le serveur de vérification.</span>';
+                });
+        });
+    </script>
+    </body>
+</html>
