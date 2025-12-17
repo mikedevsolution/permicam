@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
+            background-color: #f4f6f9; /* Fond gris pro */
             color: #333;
             min-height: 100vh;
             display: flex;
@@ -21,18 +21,21 @@
         }
 
         /* ============================
-           2. BANNIÈRE (HEADER)
+           2. BANNIÈRE (HEADER - LOGO)
            ============================ */
         .header-banner {
             width: 100%;
             background-color: #fff;
-            border-bottom: 4px solid #ffd700;
+            border-bottom: 4px solid #ffd700; /* Ligne jaune décorative */
+            overflow: hidden; /* Coupe ce qui dépasse si besoin */
         }
+        
         .header-banner img {
-            width: 100%;
-            height: auto;
-            max-height: 150px;
-            object-fit: cover;
+            width: 100%;       /* Prend toute la largeur */
+            height: auto;      /* Hauteur automatique pour garder les proportions */
+            max-height: 200px; /* Limite la hauteur pour ne pas manger tout l'écran */
+            object-fit: cover; /* IMPORTANT : Remplit le cadre sans déformer l'image */
+            object-position: center; /* Centre l'image */
             display: block;
         }
 
@@ -41,13 +44,25 @@
            ============================ */
         .main-container {
             background-color: white;
-            width: 95%;
-            max-width: 850px;
-            margin: 30px auto;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             border: 1px solid #e1e1e1;
             border-radius: 4px;
-            overflow: hidden; /* Pour que les coins arrondis fonctionnent avec le tableau */
+            overflow: hidden;
+            
+            /* MARGES PAR DÉFAUT (Mobile) */
+            width: 95%;
+            margin: 20px auto;
+        }
+
+        /* RÈGLE SPÉCIFIQUE PC (Marge 15%) */
+        @media (min-width: 992px) {
+            .main-container {
+                width: auto;       /* On laisse la largeur se calculer */
+                margin-left: 15%;  /* 15% à gauche */
+                margin-right: 15%; /* 15% à droite */
+                margin-top: 30px;
+                margin-bottom: 30px;
+            }
         }
 
         /* Titre du panneau */
@@ -61,36 +76,37 @@
             text-transform: uppercase;
             color: #444;
             font-weight: 700;
+            line-height: 1.4;
         }
 
         /* ============================
-           4. LE TABLEAU (NOUVEAU)
+           4. LE TABLEAU
            ============================ */
         .info-table {
             width: 100%;
-            border-collapse: collapse; /* Fusionne les bordures pour faire propre */
+            border-collapse: collapse;
             margin: 0;
         }
 
-        /* Les cellules du tableau */
+        /* Cellules */
         .info-table th, 
         .info-table td {
             padding: 12px 20px;
-            border-bottom: 1px solid #e1e1e1; /* Ligne grise entre les rangées */
-            border-right: 1px solid #f0f0f0;  /* Ligne verticale subtile */
+            border-bottom: 1px solid #e1e1e1;
+            border-right: 1px solid #f0f0f0;
             vertical-align: middle;
         }
 
-        /* Colonne de gauche (Labels) */
+        /* Colonne Labels (Gauche) */
         .info-table th {
             width: 40%;
-            background-color: #fcfcfc; /* Fond très légèrement gris */
+            background-color: #fcfcfc;
             color: #333;
             font-weight: 600;
             text-align: left;
         }
 
-        /* Colonne de droite (Valeurs) */
+        /* Colonne Valeurs (Droite) */
         .info-table td {
             width: 60%;
             color: #000;
@@ -98,7 +114,7 @@
             background-color: #fff;
         }
 
-        /* Les titres de sections (ex: Identité du détenteur) */
+        /* En-têtes de section */
         .section-header {
             background-color: #f8f9fa;
             color: #333;
@@ -109,9 +125,9 @@
             border-bottom: 1px solid #e1e1e1;
         }
 
-        /* Gestion de la photo dans le tableau */
+        /* Gestion Photo */
         .photo-cell {
-            text-align: center; /* Centre l'image dans sa case */
+            text-align: center;
             padding: 20px !important;
         }
         .photo-cadre {
@@ -130,7 +146,29 @@
         }
 
         /* ============================
-           5. UTILITAIRES
+           5. PIED DE PAGE (FOOTER)
+           ============================ */
+        .footer {
+            margin-top: auto;      /* Pousse le footer tout en bas */
+            margin-bottom: 20px;
+            
+            /* Style demandé */
+            text-align: right;     /* Aligné à droite */
+            color: black;          /* Couleur noire */
+            font-size: 11px;       /* Taille 11 */
+            
+            /* Pour s'aligner visuellement avec la marge de 15% sur PC */
+            padding-right: 5%; 
+        }
+
+        @media (min-width: 992px) {
+            .footer {
+                padding-right: 15%; /* S'aligne avec le bord du cadre sur PC */
+            }
+        }
+
+        /* ============================
+           6. UTILITAIRES
            ============================ */
         .status-text { font-weight: bold; text-transform: uppercase; }
         .status-valid { color: #28a745; }
@@ -140,15 +178,7 @@
         #loading { padding: 40px; text-align: center; color: #0056b3; font-weight: bold;}
         .hidden { display: none; }
 
-        .footer {
-            text-align: center;
-            margin-top: auto;
-            padding: 20px;
-            color: #888;
-            font-size: 0.8rem;
-        }
-
-        /* Responsive : Sur mobile, on garde le tableau mais on réduit le texte si besoin */
+        /* Responsive Mobile */
         @media (max-width: 600px) {
             .info-table th, .info-table td { padding: 10px; font-size: 0.9rem; }
             .info-table th { width: 35%; }
@@ -159,7 +189,7 @@
 <body>
 
     <div class="header-banner">
-        <img src="banniere_header.jpg" alt="Ministère des Transports">
+        <img src="Driver_brand_new_logo.jpg" alt="Ministère des Transports">
     </div>
 
     <div class="main-container">
@@ -266,7 +296,7 @@
                     if (data.success && data.permis) {
                         const p = data.permis;
 
-                        // Liste des IDs à remplir
+                        // Remplissage automatique
                         const ids = ['nom', 'prenoms', 'lieu-naissance', 'date-naissance', 'genre', 'nationalite', 'num-permis', 'num-capacite', 'categories', 'date-creation'];
                         ids.forEach(key => {
                             const el = document.getElementById(key);
@@ -283,7 +313,7 @@
                         const stTxt = (p.statut_demande || 'Inconnu');
                         stEl.textContent = stTxt;
                         
-                        // Couleur du statut
+                        // Couleurs Statut
                         if(stTxt.toLowerCase().includes('valid') || stTxt.toLowerCase().includes('traitement')) {
                             stEl.className = 'status-text status-valid';
                         } else if(stTxt.toLowerCase().includes('rejet')) {
