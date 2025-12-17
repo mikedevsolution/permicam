@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9; /* Le fond gris clair/bleuté du site officiel */
+            background-color: #f4f6f9;
             color: #333;
             min-height: 100vh;
             display: flex;
@@ -26,35 +26,31 @@
         .header-banner {
             width: 100%;
             background-color: #fff;
-            border-bottom: 4px solid #ffd700; /* La petite ligne jaune souvent présente */
+            border-bottom: 4px solid #ffd700;
         }
         .header-banner img {
             width: 100%;
             height: auto;
             max-height: 150px;
-            object-fit: cover; /* Recadre l'image proprement */
+            object-fit: cover;
             display: block;
         }
 
         /* ============================
-           3. LE CADRE PRINCIPAL (La boite blanche)
+           3. LE CADRE PRINCIPAL
            ============================ */
         .main-container {
             background-color: white;
-            
-            /* C'EST ICI QUE SE JOUE LE CENTRAGE */
-            width: 90%;            /* Largeur sur mobile */
-            max-width: 850px;      /* Largeur max sur PC */
-            margin: 30px auto;     /* 30px haut/bas, AUTO gauche/droite (CENTRAGE) */
-            
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Légère ombre */
-            border: 1px solid #e1e1e1; /* Fine bordure grise */
+            width: 95%;
+            max-width: 850px;
+            margin: 30px auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e1e1e1;
             border-radius: 4px;
+            overflow: hidden; /* Pour que les coins arrondis fonctionnent avec le tableau */
         }
 
-        /* ============================
-           4. TITRES ET EN-TÊTES
-           ============================ */
+        /* Titre du panneau */
         .panel-header {
             padding: 20px;
             text-align: center;
@@ -67,57 +63,63 @@
             font-weight: 700;
         }
 
-        .sub-header {
-            padding: 15px 20px;
-            background-color: #f8f9fa; /* Fond gris très clair pour le sous-titre */
-            border-bottom: 1px solid #e1e1e1;
-            font-weight: bold;
-            color: #333;
-            text-transform: uppercase;
-            font-size: 0.95rem;
-        }
-
         /* ============================
-           5. LA GRILLE DE DONNÉES (Style Tableau)
+           4. LE TABLEAU (NOUVEAU)
            ============================ */
-        .data-row {
-            display: flex; /* Met le label et la valeur côte à côte */
-            border-bottom: 1px solid #e1e1e1; /* Ligne de séparation */
-            background-color: white;
+        .info-table {
+            width: 100%;
+            border-collapse: collapse; /* Fusionne les bordures pour faire propre */
+            margin: 0;
         }
 
-        /* Colonne de Gauche (Labels) */
-        .col-label {
+        /* Les cellules du tableau */
+        .info-table th, 
+        .info-table td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #e1e1e1; /* Ligne grise entre les rangées */
+            border-right: 1px solid #f0f0f0;  /* Ligne verticale subtile */
+            vertical-align: middle;
+        }
+
+        /* Colonne de gauche (Labels) */
+        .info-table th {
             width: 40%;
-            padding: 12px 20px;
-            font-weight: 600;
+            background-color: #fcfcfc; /* Fond très légèrement gris */
             color: #333;
-            background-color: #fff;
-            border-right: 1px solid #f0f0f0; /* Petite ligne verticale optionnelle */
-            display: flex;
-            align-items: center; /* Centre le texte verticalement */
+            font-weight: 600;
+            text-align: left;
         }
 
-        /* Colonne de Droite (Valeurs) */
-        .col-value {
+        /* Colonne de droite (Valeurs) */
+        .info-table td {
             width: 60%;
-            padding: 12px 20px;
             color: #000;
             font-weight: 600;
+            background-color: #fff;
         }
 
-        /* Gestion spécifique pour la photo */
-        .row-photo .col-value {
-            display: flex;
-            justify-content: center; /* Centre la photo horizontalement */
-            padding: 20px;
+        /* Les titres de sections (ex: Identité du détenteur) */
+        .section-header {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        /* Gestion de la photo dans le tableau */
+        .photo-cell {
+            text-align: center; /* Centre l'image dans sa case */
+            padding: 20px !important;
         }
         .photo-cadre {
+            display: inline-block;
             padding: 4px;
             border: 1px solid #ddd;
             background: #fff;
             border-radius: 4px;
-            display: inline-block;
         }
         #photo-permis {
             width: 120px;
@@ -128,23 +130,16 @@
         }
 
         /* ============================
-           6. ETATS ET COULEURS
+           5. UTILITAIRES
            ============================ */
-        .status-text {
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        .status-valid { color: #28a745; } /* Vert */
-        .status-error { color: #dc3545; } /* Rouge */
-        .status-wait { color: #ffc107; }  /* Jaune */
+        .status-text { font-weight: bold; text-transform: uppercase; }
+        .status-valid { color: #28a745; }
+        .status-error { color: #dc3545; }
+        .status-wait { color: #ffc107; }
 
-        /* ============================
-           7. CHARGEMENT
-           ============================ */
         #loading { padding: 40px; text-align: center; color: #0056b3; font-weight: bold;}
         .hidden { display: none; }
 
-        /* Footer */
         .footer {
             text-align: center;
             margin-top: auto;
@@ -153,11 +148,11 @@
             font-size: 0.8rem;
         }
 
-        /* Responsive Mobile : Si l'écran est petit, on empile */
+        /* Responsive : Sur mobile, on garde le tableau mais on réduit le texte si besoin */
         @media (max-width: 600px) {
-            .data-row { flex-direction: column; }
-            .col-label { width: 100%; background-color: #f9f9f9; border-right: none; border-bottom: 1px dashed #eee; padding: 8px 20px;}
-            .col-value { width: 100%; padding: 10px 20px;}
+            .info-table th, .info-table td { padding: 10px; font-size: 0.9rem; }
+            .info-table th { width: 35%; }
+            .info-table td { width: 65%; }
         }
     </style>
 </head>
@@ -177,74 +172,72 @@
 
         <div id="content" class="hidden">
             
-            <div class="sub-header">Demande de Permis de Conduire</div>
+            <table class="info-table">
+                <tr>
+                    <td colspan="2" class="section-header">Demande de Permis de Conduire</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="section-header" style="background:white; border-bottom:1px solid #ddd; padding-top:5px; padding-bottom:5px;">Récapitulatif de la demande</td>
+                </tr>
+                <tr>
+                    <th>Etat de la demande</th>
+                    <td>
+                        <span id="statut-demande" class="status-text">...</span>
+                    </td>
+                </tr>
 
-            <div class="sub-header" style="background: white; border-bottom: 1px solid #ddd; margin-top:0;">Récapitulatif de la demande</div>
+                <tr>
+                    <td colspan="2" class="section-header">Identité du détenteur</td>
+                </tr>
+                
+                <tr>
+                    <th>Photo</th>
+                    <td class="photo-cell">
+                        <div class="photo-cadre">
+                            <img id="photo-permis" src="" alt="Photo">
+                        </div>
+                    </td>
+                </tr>
 
-            <div class="data-row">
-                <div class="col-label">Etat de la demande</div>
-                <div class="col-value">
-                    <span id="statut-demande" class="status-text">...</span>
-                </div>
-            </div>
-
-            <div class="sub-header">Identité du détenteur</div>
-
-            <div class="data-row row-photo">
-                <div class="col-label">Photo</div>
-                <div class="col-value">
-                    <div class="photo-cadre">
-                        <img id="photo-permis" src="" alt="Photo">
-                    </div>
-                </div>
-            </div>
-
-            <div class="data-row">
-                <div class="col-label">Nom</div>
-                <div class="col-value" id="nom"></div>
-            </div>
-
-            <div class="data-row">
-                <div class="col-label">Prénoms</div>
-                <div class="col-value" id="prenoms"></div>
-            </div>
-
-            <div class="data-row">
-                <div class="col-label">Date et Lieu de naissance</div>
-                <div class="col-value">
-                    <span id="date-naissance"></span> à <span id="lieu-naissance"></span>
-                </div>
-            </div>
-
-            <div class="data-row">
-                <div class="col-label">Genre</div>
-                <div class="col-value" id="genre"></div>
-            </div>
-
-            <div class="data-row">
-                <div class="col-label">Nationalité</div>
-                <div class="col-value" id="nationalite"></div>
-            </div>
-
-            <div class="data-row">
-                <div class="col-label">Numéro de permis</div>
-                <div class="col-value" id="num-permis"></div>
-            </div>
-
-             <div class="data-row">
-                <div class="col-label">Numéro de capacité</div>
-                <div class="col-value" id="num-capacite"></div>
-            </div>
-
-            <div class="data-row">
-                <div class="col-label">Catégories du permis</div>
-                <div class="col-value" id="categories"></div>
-            </div>
-
-            <div class="data-row" style="border-bottom: none;">
-                <div class="col-label">Date de création</div>
-                <div class="col-value" id="date-creation"></div>
-            </div>
+                <tr>
+                    <th>Nom</th>
+                    <td id="nom"></td>
+                </tr>
+                <tr>
+                    <th>Prénoms</th>
+                    <td id="prenoms"></td>
+                </tr>
+                <tr>
+                    <th>Date et Lieu de naissance</th>
+                    <td>
+                        <span id="date-naissance"></span> à <span id="lieu-naissance"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Genre</th>
+                    <td id="genre"></td>
+                </tr>
+                <tr>
+                    <th>Nationalité</th>
+                    <td id="nationalite"></td>
+                </tr>
+                <tr>
+                    <th>Numéro de permis</th>
+                    <td id="num-permis"></td>
+                </tr>
+                 <tr>
+                    <th>Numéro de capacité</th>
+                    <td id="num-capacite"></td>
+                </tr>
+                <tr>
+                    <th>Catégories du permis</th>
+                    <td id="categories"></td>
+                </tr>
+                <tr style="border-bottom: none;">
+                    <th style="border-bottom: none;">Date de création</th>
+                    <td style="border-bottom: none;" id="date-creation"></td>
+                </tr>
+            </table>
 
         </div>
     </div>
@@ -273,30 +266,30 @@
                     if (data.success && data.permis) {
                         const p = data.permis;
 
-                        // Remplissage des champs simples
+                        // Liste des IDs à remplir
                         const ids = ['nom', 'prenoms', 'lieu-naissance', 'date-naissance', 'genre', 'nationalite', 'num-permis', 'num-capacite', 'categories', 'date-creation'];
                         ids.forEach(key => {
                             const el = document.getElementById(key);
                             if(el) {
-                                // On gère le cas des tirets vs underscores
-                                const api key = key.replace('-', '_');
-                                el.textContent = p[api key] || p[key] || 'N/A';
+                                const apiKey = key.replace('-', '_');
+                                el.textContent = p[apiKey] || p[key] || 'N/A';
                             }
                         });
 
                         document.getElementById('photo-permis').src = p.photo_url || '';
                         
-                        // Gestion Statut et Couleur (Vert si valide)
+                        // Statut
                         const stEl = document.getElementById('statut-demande');
                         const stTxt = (p.statut_demande || 'Inconnu');
                         stEl.textContent = stTxt;
                         
+                        // Couleur du statut
                         if(stTxt.toLowerCase().includes('valid') || stTxt.toLowerCase().includes('traitement')) {
-                            stEl.className = 'status-text status-valid'; // Vert
+                            stEl.className = 'status-text status-valid';
                         } else if(stTxt.toLowerCase().includes('rejet')) {
-                            stEl.className = 'status-text status-error'; // Rouge
+                            stEl.className = 'status-text status-error';
                         } else {
-                            stEl.className = 'status-text status-wait'; // Jaune
+                            stEl.className = 'status-text status-wait';
                         }
 
                         loading.style.display = 'none';
