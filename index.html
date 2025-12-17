@@ -1,197 +1,314 @@
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Permicam - Vérification</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permicam - Vérification</title>
+    
+    <style>
+        /* ============================
+           1. RESET & FOND
+           ============================ */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9; /* Le fond gris clair/bleuté du site officiel */
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    <link href="https://www.cartegrisecameroun.com/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://www.cartegrisecameroun.com/css/style.css" rel="stylesheet">
-    <link href="https://www.cartegrisecameroun.com/css/all.css" rel="stylesheet">
-    <link href="https://www.cartegrisecameroun.com/css/flaticon.css" rel="stylesheet">
-    
-    <link rel="icon" type="image/png" sizes="32x32" href="https://www.cartegrisecameroun.com/favicon/favicon.ico">
+        /* ============================
+           2. BANNIÈRE (HEADER)
+           ============================ */
+        .header-banner {
+            width: 100%;
+            background-color: #fff;
+            border-bottom: 4px solid #ffd700; /* La petite ligne jaune souvent présente */
+        }
+        .header-banner img {
+            width: 100%;
+            height: auto;
+            max-height: 150px;
+            object-fit: cover; /* Recadre l'image proprement */
+            display: block;
+        }
 
-    <style>
-        /* Quelques styles pour gérer le chargement et les erreurs */
-        body { background-color: #f0f0fa; }
-        .ms-content-wrapper { max-width: 900px; margin: 20px auto; }
-        #status-message { padding: 20px; text-align: center; font-weight: bold; font-size: 1.1em; }
-        .status-loading { color: #007bff; }
-        .status-error { color: #dc3545; }
-    </style>
+        /* ============================
+           3. LE CADRE PRINCIPAL (La boite blanche)
+           ============================ */
+        .main-container {
+            background-color: white;
+            
+            /* C'EST ICI QUE SE JOUE LE CENTRAGE */
+            width: 90%;            /* Largeur sur mobile */
+            max-width: 850px;      /* Largeur max sur PC */
+            margin: 30px auto;     /* 30px haut/bas, AUTO gauche/droite (CENTRAGE) */
+            
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Légère ombre */
+            border: 1px solid #e1e1e1; /* Fine bordure grise */
+            border-radius: 4px;
+        }
+
+        /* ============================
+           4. TITRES ET EN-TÊTES
+           ============================ */
+        .panel-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #e1e1e1;
+        }
+        .panel-header h2 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            color: #444;
+            font-weight: 700;
+        }
+
+        .sub-header {
+            padding: 15px 20px;
+            background-color: #f8f9fa; /* Fond gris très clair pour le sous-titre */
+            border-bottom: 1px solid #e1e1e1;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+        }
+
+        /* ============================
+           5. LA GRILLE DE DONNÉES (Style Tableau)
+           ============================ */
+        .data-row {
+            display: flex; /* Met le label et la valeur côte à côte */
+            border-bottom: 1px solid #e1e1e1; /* Ligne de séparation */
+            background-color: white;
+        }
+
+        /* Colonne de Gauche (Labels) */
+        .col-label {
+            width: 40%;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #333;
+            background-color: #fff;
+            border-right: 1px solid #f0f0f0; /* Petite ligne verticale optionnelle */
+            display: flex;
+            align-items: center; /* Centre le texte verticalement */
+        }
+
+        /* Colonne de Droite (Valeurs) */
+        .col-value {
+            width: 60%;
+            padding: 12px 20px;
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* Gestion spécifique pour la photo */
+        .row-photo .col-value {
+            display: flex;
+            justify-content: center; /* Centre la photo horizontalement */
+            padding: 20px;
+        }
+        .photo-cadre {
+            padding: 4px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        #photo-permis {
+            width: 120px;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+            background-color: #eee;
+        }
+
+        /* ============================
+           6. ETATS ET COULEURS
+           ============================ */
+        .status-text {
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-valid { color: #28a745; } /* Vert */
+        .status-error { color: #dc3545; } /* Rouge */
+        .status-wait { color: #ffc107; }  /* Jaune */
+
+        /* ============================
+           7. CHARGEMENT
+           ============================ */
+        #loading { padding: 40px; text-align: center; color: #0056b3; font-weight: bold;}
+        .hidden { display: none; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 20px;
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive Mobile : Si l'écran est petit, on empile */
+        @media (max-width: 600px) {
+            .data-row { flex-direction: column; }
+            .col-label { width: 100%; background-color: #f9f9f9; border-right: none; border-bottom: 1px dashed #eee; padding: 8px 20px;}
+            .col-value { width: 100%; padding: 10px 20px;}
+        }
+    </style>
 </head>
+<body>
 
-<body class="ms-body">
-    <main class="body-content">
-        <nav class="nav-background">
-            <img src="Driver_brand_new_logo.jpg" alt="logo" height="20%" width="100%">
-        </nav>
+    <div class="header-banner">
+        <img src="banniere_header.jpg" alt="Ministère des Transports">
+    </div>
 
-        <div class="ms-content-wrapper">
-            <div class="row" style="justify-content:center;">
-                <div class="col-md-10">
-                    <div class="ms-panel">
-                        <div class="ms-panel-header">
-                            <div class="ms-header-text mb-0 pb-0" style=" text-align: center;">
-                                <h6>BIENVENUE SUR LE PORTAIL D'ENROLEMENT A LA DEMANDE DE PERMIS DE CONDUIRE ET BADGE</h6>
-                            </div>
-                        </div>
-                        <div class="ms-panel-body pb-2" id="main-content">
-                            <div class="ms-panel">
-                                <div class="ms-panel-header">
-                                    <div class=" d-flex justify-content-between">
-                                        <div class="ms-header-text">
-                                            <h6 style="font-weight:bold;">DEMANDE DE PERMIS DE CONDUIRE</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="ms-panel-body p-0">
-                                    
-                                    <div id="status-message">
-                                        <span class="status-loading">Chargement des informations...</span>
-                                    </div>
-                                    
-                                    <div class="table-responsive" id="permis-data" style="display:none;">
-                                        <table class="table table-bordered mb-0">
-                                            <caption style="caption-side: top; margin-left: 10px; font-weight: bold; color: black">Recapitulatif de la demande</caption>
-                                            
-                                            <tbody>
-                                                <tr>
-                                                    <td style="font-weight:bold">Etat de la demande </td>
-                                                    <td style="width:50%">
-                                                        <span id="statut-demande" style="font-weight: bold; color: red;"></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="col" colspan="2">Identité du detenteur</th>
-                                                </tr>
-                                            </tbody>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Photo</td>
-                                                    <td>
-                                                        <div class=" row col-sm-4">
-                                                            <img id="photo-permis" src="" style="width:120px; height:150px; background-color: #eee;">
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Nom</td>
-                                                    <td><span id="nom" style="font-weight: bold"></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Prénoms</td>
-                                                    <td><span id="prenoms" style="font-weight: bold"></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Lieu de naissance</td>
-                                                    <td><span id="lieu-naissance" style="font-weight: bold"></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Date de naissance</td>
-                                                    <td><span id="date-naissance" style="font-weight: bold"></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Genre</td>
-                                                    <td><span id="genre" style="font-weight: bold"></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Nationalité</td>
-                                                    <td><span id="nationalite" style="font-weight: bold"></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Numéro de permis </td>
-                                                    <td><span id="num-permis" style="font-weight: bold;"></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Numéro de capacité </td>
-                                                    <td><span id="num-capacite" style="font-weight: bold;"></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Catégories du permis </td>
-                                                    <td><span id="categories" style="font-weight: bold;"></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Date de création de la demande </td>
-                                                    <td><span id="date-creation" style="font-weight: bold;"></span></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer_position " id="pied-de-page">
-            <p>Copyright © 2023 - All rights reserved - MINT - Cameroon</p>
-        </div>
-    </main>
-    
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            
-            // 1. URL de votre API sur le serveur LWS
-            const apiUrl = "https://www.cartegrisecameroun.com/public/api/getPermisInfo.php";
+    <div class="main-container">
+        
+        <div class="panel-header">
+            <h2>Bienvenue sur le portail d'enrôlement à la demande de permis de conduire et badge</h2>
+        </div>
 
-            // 2. Références aux éléments HTML
-            const statusMessageEl = document.getElementById("status-message");
-            const permisDataEl = document.getElementById("permis-data");
-            
-            // 3. Récupérer l'ID du permis depuis l'URL de cette page
-            const params = new URLSearchParams(window.location.search);
-            const permisId = params.get('id');
+        <div id="loading">Chargement des informations...</div>
 
-            if (!permisId) {
-                statusMessageEl.innerHTML = '<span class="status-error">Erreur : Aucun identifiant de permis n\'a été fourni.</span>';
-                return;
-            }
+        <div id="content" class="hidden">
+            
+            <div class="sub-header">Demande de Permis de Conduire</div>
 
-            // 4. Appeler l'API pour récupérer les données
-            fetch(apiUrl + '?id=' + permisId)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Erreur réseau ou API non trouvée.");
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success && data.permis) {
-                        // 5. Remplir les champs avec les données reçues
-                        const permis = data.permis;
-                        
-                        document.getElementById('statut-demande').textContent = permis.statut_demande || 'N/A';
-                        document.getElementById('photo-permis').src = permis.photo_url || '';
-                        document.getElementById('nom').textContent = permis.nom || 'N/A';
-                        document.getElementById('prenoms').textContent = permis.prenom || 'N/A';
-                        document.getElementById('lieu-naissance').textContent = permis.lieu_naissance || 'N/A';
-                        document.getElementById('date-naissance').textContent = permis.date_naissance || 'N/A';
-                        document.getElementById('genre').textContent = permis.genre || 'N/A';
-                        document.getElementById('nationalite').textContent = permis.nationalite || 'N/A';
-                        document.getElementById('num-permis').textContent = permis.num_permis || 'N/A';
-                        document.getElementById('num-capacite').textContent = permis.num_capacite || 'N/A';
-                        document.getElementById('categories').textContent = permis.categories || 'N/A';
-                        document.getElementById('date-creation').textContent = permis.date_creation || 'N/A';
+            <div class="sub-header" style="background: white; border-bottom: 1px solid #ddd; margin-top:0;">Récapitulatif de la demande</div>
 
-                        // 6. Afficher les données et cacher le message de chargement
-                        statusMessageEl.style.display = 'none';
-                        permisDataEl.style.display = 'block';
+            <div class="data-row">
+                <div class="col-label">Etat de la demande</div>
+                <div class="col-value">
+                    <span id="statut-demande" class="status-text">...</span>
+                </div>
+            </div>
 
-                    } else {
-                        // Gérer les erreurs de l'API (ex: permis non trouvé)
-                        statusMessageEl.innerHTML = `<span class="status-error">Erreur : ${data.error || 'Impossible de récupérer les informations.'}</span>`;
-                    }
-                })
-                .catch(error => {
-                    // Gérer les erreurs de connexion
-                    console.error('Erreur de fetch:', error);
-                    statusMessageEl.innerHTML = '<span class="status-error">Erreur de connexion. Impossible de contacter le serveur de vérification.</span>';
-                });
-        });
-    </script>
-    </body>
+            <div class="sub-header">Identité du détenteur</div>
 
+            <div class="data-row row-photo">
+                <div class="col-label">Photo</div>
+                <div class="col-value">
+                    <div class="photo-cadre">
+                        <img id="photo-permis" src="" alt="Photo">
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-row">
+                <div class="col-label">Nom</div>
+                <div class="col-value" id="nom"></div>
+            </div>
+
+            <div class="data-row">
+                <div class="col-label">Prénoms</div>
+                <div class="col-value" id="prenoms"></div>
+            </div>
+
+            <div class="data-row">
+                <div class="col-label">Date et Lieu de naissance</div>
+                <div class="col-value">
+                    <span id="date-naissance"></span> à <span id="lieu-naissance"></span>
+                </div>
+            </div>
+
+            <div class="data-row">
+                <div class="col-label">Genre</div>
+                <div class="col-value" id="genre"></div>
+            </div>
+
+            <div class="data-row">
+                <div class="col-label">Nationalité</div>
+                <div class="col-value" id="nationalite"></div>
+            </div>
+
+            <div class="data-row">
+                <div class="col-label">Numéro de permis</div>
+                <div class="col-value" id="num-permis"></div>
+            </div>
+
+             <div class="data-row">
+                <div class="col-label">Numéro de capacité</div>
+                <div class="col-value" id="num-capacite"></div>
+            </div>
+
+            <div class="data-row">
+                <div class="col-label">Catégories du permis</div>
+                <div class="col-value" id="categories"></div>
+            </div>
+
+            <div class="data-row" style="border-bottom: none;">
+                <div class="col-label">Date de création</div>
+                <div class="col-value" id="date-creation"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="footer">
+        Copyright © 2025 - All rights reserved - MINT - Cameroon
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const apiUrl = "https://www.cartegrisecameroun.com/public/api/getPermisInfo.php";
+            const loading = document.getElementById("loading");
+            const content = document.getElementById("content");
+            
+            const params = new URLSearchParams(window.location.search);
+            const permisId = params.get('id');
+
+            if (!permisId) {
+                loading.innerHTML = '<span style="color:red">Aucun ID fourni.</span>';
+                return;
+            }
+
+            fetch(apiUrl + '?id=' + permisId)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.permis) {
+                        const p = data.permis;
+
+                        // Remplissage des champs simples
+                        const ids = ['nom', 'prenoms', 'lieu-naissance', 'date-naissance', 'genre', 'nationalite', 'num-permis', 'num-capacite', 'categories', 'date-creation'];
+                        ids.forEach(key => {
+                            const el = document.getElementById(key);
+                            if(el) {
+                                // On gère le cas des tirets vs underscores
+                                const api key = key.replace('-', '_');
+                                el.textContent = p[api key] || p[key] || 'N/A';
+                            }
+                        });
+
+                        document.getElementById('photo-permis').src = p.photo_url || '';
+                        
+                        // Gestion Statut et Couleur (Vert si valide)
+                        const stEl = document.getElementById('statut-demande');
+                        const stTxt = (p.statut_demande || 'Inconnu');
+                        stEl.textContent = stTxt;
+                        
+                        if(stTxt.toLowerCase().includes('valid') || stTxt.toLowerCase().includes('traitement')) {
+                            stEl.className = 'status-text status-valid'; // Vert
+                        } else if(stTxt.toLowerCase().includes('rejet')) {
+                            stEl.className = 'status-text status-error'; // Rouge
+                        } else {
+                            stEl.className = 'status-text status-wait'; // Jaune
+                        }
+
+                        loading.style.display = 'none';
+                        content.style.display = 'block';
+                    } else {
+                        loading.innerHTML = '<span style="color:red">Dossier introuvable.</span>';
+                    }
+                })
+                .catch(err => {
+                    loading.innerHTML = '<span style="color:red">Erreur de connexion serveur.</span>';
+                });
+        });
+    </script>
+</body>
 </html>
