@@ -312,23 +312,18 @@
                         stEl.textContent = stTxt;
                         
                         // Couleurs Statut
-                    // --- REMPLACE CETTE PARTIE DANS TON SCRIPT JS ---
-                    
-                    // 1. D'abord on vérifie si c'est un rejet (ERREUR - ROUGE)
-                    if (stTxt.toLowerCase().includes('rejet')) {
-                        stEl.className = 'status-text status-error';
-                    } 
-                    // 2. Ensuite on vérifie si c'est en cours (ATTENTE - JAUNE #ffc107)
-                    else if (stTxt.toLowerCase().includes('traitement') || stTxt.toLowerCase().includes('cours')) {
-                        stEl.className = 'status-text status-wait';
-                    } 
-                    // 3. Enfin, si c'est valide ou autre (SUCCÈS - VERT)
-                    else if (stTxt.toLowerCase().includes('valid')) {
-                        stEl.className = 'status-text status-valid';
-                    } 
-                    // 4. Par défaut si rien ne correspond
-                    else {
-                        stEl.className = 'status-text'; 
+                        if(stTxt.toLowerCase().includes('valid') || stTxt.toLowerCase().includes('traitement')) {
+                            stEl.className = 'status-text status-valid';
+                        } else if(stTxt.toLowerCase().includes('rejet')) {
+                            stEl.className = 'status-text status-error';
+                        } else {
+                            stEl.className = 'status-text status-wait';
+                        }
+
+                        loading.style.display = 'none';
+                        content.style.display = 'block';
+                    } else {
+                        loading.innerHTML = '<span style="color:red">Dossier introuvable.</span>';
                     }
                 })
                 .catch(err => {
@@ -338,8 +333,6 @@
     </script>
 </body>
 </html>
-
-
 
 
 
