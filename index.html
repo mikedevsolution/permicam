@@ -274,65 +274,82 @@
         Copyright © 2025 - All rights reserved - MINT - Cameroon
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const apiUrl = "https://www.cartegrisecameroun.com/public/api/getPermisInfo.php";
-            const loading = document.getElementById("loading");
-            const content = document.getElementById("content");
-            
-            const params = new URLSearchParams(window.location.search);
-            const permisId = params.get('id');
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const apiUrl = "https://www.cartegrisecameroun.com/public/api/getPermisInfo.php";
+        const loading = document.getElementById("loading");
+        const content = document.getElementById("content");
+        
+        const params = new URLSearchParams(window.location.search);
+        const permisId = params.get('id');
 
-            if (!permisId) {
-                loading.innerHTML = '<span style="color:red">Aucun ID fourni.</span>';
-                return;
-            }
+        if (!permisId) {
+            loading.innerHTML = '<span style="color:red">Aucun ID fourni.</span>';
+            return;
+        }
 
-            fetch(apiUrl + '?id=' + permisId)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success && data.permis) {
-                        const p = data.permis;
+        fetch(apiUrl + '?id=' + permisId)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.permis) {
+                    const p = data.permis;
 
-                        // Remplissage automatique
-                        const ids = ['nom', 'prenoms', 'lieu-naissance', 'date-naissance', 'genre', 'nationalite', 'num-permis', 'num-capacite', 'categories', 'date-creation'];
-                        ids.forEach(key => {
-                            const el = document.getElementById(key);
-                            if(el) {
-                                const apiKey = key.replace('-', '_');
-                                el.textContent = p[apiKey] || p[key] || 'N/A';
-                            }
-                        });
-
-                        document.getElementById('photo-permis').src = p.photo_url || '';
-                        
-                        // Statut
-                        const stEl = document.getElementById('statut-demande');
-                        const stTxt = (p.statut_demande || 'Inconnu');
-                        stEl.textContent = stTxt;
-                        
-                        // Couleurs Statut
-                        if(stTxt.toLowerCase().includes('valid') || stTxt.toLowerCase().includes('traitement')) {
-                            stEl.className = 'status-text status-valid';
-                        } else if(stTxt.toLowerCase().includes('rejet')) {
-                            stEl.className = 'status-text status-error';
-                        } else {
-                            stEl.className = 'status-text status-wait';
+                    // 1. Remplissage automatique des champs texte
+                    const ids = ['nom', 'prenoms', 'lieu-naissance', 'date-naissance', 'genre', 'nationalite', 'num-permis', 'num-capacite', 'categories', 'date-creation'];
+                    ids.forEach(key => {
+                        const el = document.getElementById(key);
+                        if(el) {
+                            const apiKey = key.replace('-', '_');
+                            el.textContent = p[apiKey] || p[key] || 'N/A';
                         }
+                    });
 
-                        loading.style.display = 'none';
-                        content.style.display = 'block';
-                    } else {
-                        loading.innerHTML = '<span style="color:red">Dossier introuvable.</span>';
+                    // 2. Mise à jour de la photo
+                    document.getElementById('photo-permis').src = p.photo_url || '';
+                    
+                    // 3. Gestion du Statut (Texte et Couleur)
+                    const stEl = document.getElementById('statut-demande');
+                    const stTxt = (p.statut_demande || 'Inconnu');
+                    stEl.textContent = stTxt;
+                    
+                    // --- LOGIQUE DE COULEUR MISE À JOUR ---
+                    const lowerTxt = stTxt.toLowerCase();
+
+                    if (lowerTxt.includes('rejet')) {
+                        // ROUGE (#dc3545)
+                        stEl.className = 'status-text status-error';
+                    } 
+                    else if (lowerTxt.includes('traitement') || lowerTxt.includes('cours')) {
+                        // JAUNE (#ffc107) -> Priorité ici pour capter "Traitement en cours"
+                        stEl.className = 'status-text status-wait';
+                    } 
+                    else if (lowerTxt.includes('valid')) {
+                        // VERT (#28a745)
+                        stEl.className = 'status-text status-valid';
+                    } 
+                    else {
+                        // PAR DÉFAUT (GRIS ou JAUNE selon ton CSS)
+                        stEl.className = 'status-text status-wait';
                     }
-                })
-                .catch(err => {
-                    loading.innerHTML = '<span style="color:red">Erreur de connexion serveur.</span>';
-                });
-        });
-    </script>
+                    // --------------------------------------
+
+                    loading.style.display = 'none';
+                    content.classList.remove('hidden'); // Utilise la classe CSS plutôt que style.display
+                    content.style.display = 'block';
+                    
+                } else {
+                    loading.innerHTML = '<span style="color:red">Dossier introuvable.</span>';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                loading.innerHTML = '<span style="color:red">Erreur de connexion serveur.</span>';
+            });
+    });
+</script>
 </body>
 </html>
+
 
 
 
