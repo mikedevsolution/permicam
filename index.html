@@ -125,14 +125,15 @@
             padding: 4px;
             border: 1px solid #ddd;
             background: #fff;
-            border-radius: 4px;
+            border-radius: 50%; /* REND LE CADRE OVALE */
         }
         #photo-permis {
-            width: 120px;
-            height: 150px;
+            width: 130px; /* Légèrement élargi pour un plus bel ovale */
+            height: 160px;
             object-fit: cover;
             display: block;
             background-color: #eee;
+            border-radius: 50%; /* REND LA PHOTO OVALE */
         }
 
         /* ============================
@@ -149,7 +150,9 @@
         /* ============================
            6. UTILITAIRES
            ============================ */
-        .status-text { font-weight: bold; text-transform: uppercase; }
+        /* MODIFICATION : Suppression de text-transform: uppercase; pour respecter la casse */
+        .status-text { font-weight: bold; } 
+        
         .status-valid { color: #28a745; } 
         .status-error { color: #dc3545; } 
         .status-wait { color: #ffc107; }  
@@ -217,10 +220,12 @@
                     <td id="prenom"></td> 
                 </tr>
                 <tr>
-                    <th>Date et Lieu de naissance</th>
-                    <td>
-                        <span id="date-naissance"></span> à <span id="lieu-naissance"></span>
-                    </td>
+                    <th>Date de naissance</th>
+                    <td id="date-naissance"></td>
+                </tr>
+                <tr>
+                    <th>Lieu de naissance</th>
+                    <td id="lieu-naissance"></td>
                 </tr>
                 <tr>
                     <th>Genre</th>
@@ -281,7 +286,6 @@
                         const el = document.getElementById(key);
                         if(el) {
                             const apiKey = key.replace('-', '_');
-                            // --- MODIFICATION ICI : Affiche du vide plutôt que 'N/A' ---
                             let valeur = p[apiKey] || p[key] || '';
                             el.textContent = (valeur === 'N/A') ? '' : valeur;
                         }
@@ -292,12 +296,14 @@
                     
                     // 3. Gestion du Statut (Texte et Couleur)
                     const stEl = document.getElementById('statut-demande');
+                    
+                    // Si le statut brut est vide (ou 'receptionnee' en minuscule dans la DB), on l'affiche tel quel
                     const stTxt = (p.statut_demande || 'Inconnu');
                     stEl.textContent = stTxt;
                     
                     const lowerTxt = stTxt.toLowerCase();
 
-                    if (lowerTxt.includes('corriger') || lowerTxt.includes('rejet')) {
+                    if (lowerTxt.includes('corriger') || lowerTxt.includes('rejet') || lowerTxt.includes('refus')) {
                         stEl.className = 'status-text status-error'; 
                     } 
                     else if (lowerTxt.includes('traitement') || lowerTxt.includes('cours')) {
