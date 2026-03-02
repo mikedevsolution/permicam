@@ -125,8 +125,8 @@
             padding: 4px;
             border: 1px solid #ddd;
             background: #fff;
-            /* MODIFICATION: Arrondi elliptique pour le cadre */
-            border-radius: 60px / 80px; 
+            /* MODIFICATION: Angles arrondis (rectangle adouci) */
+            border-radius: 15px; 
         }
         #photo-permis {
             width: 130px;
@@ -134,8 +134,8 @@
             object-fit: cover;
             display: block;
             background-color: #eee;
-            /* MODIFICATION: Arrondi elliptique pour la photo */
-            border-radius: 56px / 76px; 
+            /* MODIFICATION: Angles de l'image légèrement plus petits pour épouser le cadre */
+            border-radius: 12px; 
         }
 
         /* ============================
@@ -298,7 +298,6 @@
                     // 3. Gestion du Statut (Texte et Couleur)
                     const stEl = document.getElementById('statut-demande');
                     
-                    // Si le statut brut est vide (ou 'receptionnee' en minuscule dans la DB), on l'affiche tel quel
                     const stTxt = (p.statut_demande || 'Inconnu');
                     stEl.textContent = stTxt;
                     
