@@ -150,9 +150,9 @@
            6. UTILITAIRES
            ============================ */
         .status-text { font-weight: bold; text-transform: uppercase; }
-        .status-valid { color: #28a745; } /* C'est le vert */
-        .status-error { color: #dc3545; } /* C'est le rouge */
-        .status-wait { color: #ffc107; }  /* C'est le jaune */
+        .status-valid { color: #28a745; } 
+        .status-error { color: #dc3545; } 
+        .status-wait { color: #ffc107; }  
 
         #loading { padding: 40px; text-align: center; color: #0056b3; font-weight: bold;}
         .hidden { display: none !important; }
@@ -281,7 +281,9 @@
                         const el = document.getElementById(key);
                         if(el) {
                             const apiKey = key.replace('-', '_');
-                            el.textContent = p[apiKey] || p[key] || 'N/A';
+                            // --- MODIFICATION ICI : Affiche du vide plutôt que 'N/A' ---
+                            let valeur = p[apiKey] || p[key] || '';
+                            el.textContent = (valeur === 'N/A') ? '' : valeur;
                         }
                     });
 
@@ -296,17 +298,16 @@
                     const lowerTxt = stTxt.toLowerCase();
 
                     if (lowerTxt.includes('corriger') || lowerTxt.includes('rejet')) {
-                        stEl.className = 'status-text status-error'; // Rouge
+                        stEl.className = 'status-text status-error'; 
                     } 
                     else if (lowerTxt.includes('traitement') || lowerTxt.includes('cours')) {
-                        // MODIFICATION ICI : On applique "status-valid" pour avoir du vert au lieu du jaune
                         stEl.className = 'status-text status-valid'; 
                     } 
                     else if (lowerTxt.includes('valid')) {
-                        stEl.className = 'status-text status-valid'; // Vert
+                        stEl.className = 'status-text status-valid'; 
                     } 
                     else {
-                        stEl.className = 'status-text status-wait'; // Jaune par défaut
+                        stEl.className = 'status-text status-wait'; 
                     }
 
                     // 4. Affichage du tableau
