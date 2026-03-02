@@ -125,7 +125,6 @@
             padding: 4px;
             border: 1px solid #ddd;
             background: #fff;
-            /* MODIFICATION: Angles arrondis (rectangle adouci) */
             border-radius: 15px; 
         }
         #photo-permis {
@@ -134,7 +133,6 @@
             object-fit: cover;
             display: block;
             background-color: #eee;
-            /* MODIFICATION: Angles de l'image légèrement plus petits pour épouser le cadre */
             border-radius: 12px; 
         }
 
@@ -154,7 +152,7 @@
            ============================ */
         .status-text { font-weight: bold; } 
         
-        .status-valid { color: #28a745; } 
+        .status-valid { color: #28a745; } /* C'est le vert */
         .status-error { color: #dc3545; } 
         .status-wait { color: #ffc107; }  
 
@@ -297,24 +295,11 @@
                     
                     // 3. Gestion du Statut (Texte et Couleur)
                     const stEl = document.getElementById('statut-demande');
-                    
                     const stTxt = (p.statut_demande || 'Inconnu');
-                    stEl.textContent = stTxt;
                     
-                    const lowerTxt = stTxt.toLowerCase();
-
-                    if (lowerTxt.includes('corriger') || lowerTxt.includes('rejet') || lowerTxt.includes('refus')) {
-                        stEl.className = 'status-text status-error'; 
-                    } 
-                    else if (lowerTxt.includes('traitement') || lowerTxt.includes('cours')) {
-                        stEl.className = 'status-text status-valid'; 
-                    } 
-                    else if (lowerTxt.includes('valid')) {
-                        stEl.className = 'status-text status-valid'; 
-                    } 
-                    else {
-                        stEl.className = 'status-text status-wait'; 
-                    }
+                    stEl.textContent = stTxt;
+                    // On force la couleur verte pour tous les statuts
+                    stEl.className = 'status-text status-valid'; 
 
                     // 4. Affichage du tableau
                     loading.style.display = 'none';
