@@ -125,15 +125,17 @@
             padding: 4px;
             border: 1px solid #ddd;
             background: #fff;
-            border-radius: 50%; /* REND LE CADRE OVALE */
+            /* MODIFICATION: Arrondi elliptique pour le cadre */
+            border-radius: 60px / 80px; 
         }
         #photo-permis {
-            width: 130px; /* Légèrement élargi pour un plus bel ovale */
+            width: 130px;
             height: 160px;
             object-fit: cover;
             display: block;
             background-color: #eee;
-            border-radius: 50%; /* REND LA PHOTO OVALE */
+            /* MODIFICATION: Arrondi elliptique pour la photo */
+            border-radius: 56px / 76px; 
         }
 
         /* ============================
@@ -150,7 +152,6 @@
         /* ============================
            6. UTILITAIRES
            ============================ */
-        /* MODIFICATION : Suppression de text-transform: uppercase; pour respecter la casse */
         .status-text { font-weight: bold; } 
         
         .status-valid { color: #28a745; } 
