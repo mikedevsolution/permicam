@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9; /* Fond gris pro */
+            background-color: #f4f6f9;
             color: #333;
             min-height: 100vh;
             display: flex;
@@ -26,15 +26,14 @@
         .header-banner {
             width: 100%;
             background-color: #fff;
-
         }
         
         .header-banner img {
-            width: 100%;       /* Prend toute la largeur */
-            height: auto;      /* Hauteur automatique pour garder les proportions */
-            max-height: 200px; /* Limite la hauteur pour ne pas manger tout l'écran */
-            object-fit: cover; /* IMPORTANT : Remplit le cadre sans déformer l'image */
-            object-position: center; /* Centre l'image */
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: cover;
+            object-position: center;
             display: block;
         }
 
@@ -47,24 +46,20 @@
             border: 1px solid #e1e1e1;
             border-radius: 4px;
             overflow: hidden;
-            
-            /* MARGES PAR DÉFAUT (Mobile) */
             width: 95%;
             margin: 20px auto;
         }
 
-        /* RÈGLE SPÉCIFIQUE PC (Marge 15%) */
         @media (min-width: 992px) {
             .main-container {
-                width: auto;       /* On laisse la largeur se calculer */
-                margin-left: 15%;  /* 15% à gauche */
-                margin-right: 15%; /* 15% à droite */
+                width: auto;
+                margin-left: 15%;
+                margin-right: 15%;
                 margin-top: 30px;
                 margin-bottom: 30px;
             }
         }
 
-        /* Titre du panneau */
         .panel-header {
             padding: 20px;
             text-align: center;
@@ -87,7 +82,6 @@
             margin: 0;
         }
 
-        /* Cellules */
         .info-table th, 
         .info-table td {
             padding: 12px 20px;
@@ -96,7 +90,6 @@
             vertical-align: middle;
         }
 
-        /* Colonne Labels (Gauche) */
         .info-table th {
             width: 40%;
             background-color: #fcfcfc;
@@ -105,7 +98,6 @@
             text-align: left;
         }
 
-        /* Colonne Valeurs (Droite) */
         .info-table td {
             width: 60%;
             color: #000;
@@ -113,7 +105,6 @@
             background-color: #fff;
         }
 
-        /* En-têtes de section */
         .section-header {
             background-color: #f8f9fa;
             color: #333;
@@ -148,21 +139,11 @@
            5. PIED DE PAGE (FOOTER)
            ============================ */
         .footer {
-            margin-top: auto;      /* Pousse le footer tout en bas */
-         
-            
-            /* Style demandé */
-            text-align: right;     /* Aligné à droite */
-            color: black;          /* Couleur noire */
-            
-            
-
-        }
-
-        @media (min-width: 992px) {
-            .footer {
-         
-            }
+            margin-top: auto;
+            text-align: right;
+            color: black;
+            padding: 15px 20px;
+            font-size: 0.9rem;
         }
 
         /* ============================
@@ -174,7 +155,7 @@
         .status-wait { color: #ffc107; }
 
         #loading { padding: 40px; text-align: center; color: #0056b3; font-weight: bold;}
-        .hidden { display: none; }
+        .hidden { display: none !important; }
 
         /* Responsive Mobile */
         @media (max-width: 600px) {
@@ -233,7 +214,7 @@
                 </tr>
                 <tr>
                     <th>Prénoms</th>
-                    <td id="prenoms"></td>
+                    <td id="prenom"></td> 
                 </tr>
                 <tr>
                     <th>Date et Lieu de naissance</th>
@@ -295,7 +276,8 @@
                     const p = data.permis;
 
                     // 1. Remplissage automatique des champs texte
-                    const ids = ['nom', 'prenoms', 'lieu-naissance', 'date-naissance', 'genre', 'nationalite', 'num-permis', 'num-capacite', 'categories', 'date-creation'];
+                    // CORRECTION : "prenom" mis à la place de "prenoms"
+                    const ids = ['nom', 'prenom', 'lieu-naissance', 'date-naissance', 'genre', 'nationalite', 'num-permis', 'num-capacite', 'categories', 'date-creation'];
                     ids.forEach(key => {
                         const el = document.getElementById(key);
                         if(el) {
@@ -312,30 +294,24 @@
                     const stTxt = (p.statut_demande || 'Inconnu');
                     stEl.textContent = stTxt;
                     
-                    // --- LOGIQUE DE COULEUR MISE À JOUR ---
                     const lowerTxt = stTxt.toLowerCase();
 
-                    if (lowerTxt.includes('rejet')) {
-                        // ROUGE (#dc3545)
+                    if (lowerTxt.includes('corriger') || lowerTxt.includes('rejet')) {
                         stEl.className = 'status-text status-error';
                     } 
                     else if (lowerTxt.includes('traitement') || lowerTxt.includes('cours')) {
-                        // JAUNE (#ffc107) -> Priorité ici pour capter "Traitement en cours"
                         stEl.className = 'status-text status-wait';
                     } 
                     else if (lowerTxt.includes('valid')) {
-                        // VERT (#28a745)
                         stEl.className = 'status-text status-valid';
                     } 
                     else {
-                        // PAR DÉFAUT (GRIS ou JAUNE selon ton CSS)
                         stEl.className = 'status-text status-wait';
                     }
-                    // --------------------------------------
 
+                    // 4. Affichage du tableau
                     loading.style.display = 'none';
-                    content.classList.remove('hidden'); // Utilise la classe CSS plutôt que style.display
-                    content.style.display = 'block';
+                    content.classList.remove('hidden'); 
                     
                 } else {
                     loading.innerHTML = '<span style="color:red">Dossier introuvable.</span>';
@@ -349,8 +325,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
