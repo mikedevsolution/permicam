@@ -188,7 +188,7 @@
                     <td colspan="2" class="section-header">Demande de Permis de Conduire</td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="section-header" style="background:white; border-bottom:1px solid #ddd; padding-top:5px; padding-bottom:5px;">Récapitulatif de la demande</td>
+                   <td colspan="2" class="section-header" style="background:white; border-bottom:1px solid #ddd; padding-top:5px; padding-bottom:5px; text-transform: none;">Récapitulatif de la demande</td>
                 </tr>
                 <tr>
                     <th>Etat de la demande</th>
@@ -198,7 +198,7 @@
                 </tr>
 
                 <tr>
-                    <td colspan="2" class="section-header">Identité du détenteur</td>
+                    <td style="text-transform: none; colspan="2" class="section-header">Identité du détenteur</td>
                 </tr>
                 
                 <tr>
@@ -289,6 +289,12 @@
                         if(el) {
                             const apiKey = key.replace('-', '_');
                             let valeur = p[apiKey] || p[key] || '';
+                            
+                            // Abréger le genre (M ou F)
+                            if (key === 'genre' && valeur !== 'N/A' && valeur.length > 0) {
+                                valeur = valeur.charAt(0).toUpperCase();
+                            }
+
                             el.textContent = (valeur === 'N/A') ? '' : valeur;
                         }
                     });
@@ -320,3 +326,4 @@
 </script>
 </body>
 </html>
+
