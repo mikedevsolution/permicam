@@ -261,10 +261,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // --- MODIFICATION ICI : On pointe vers le nouveau nom de domaine ---
-        const apiUrl = "https://ci4cartesgrise.com/public/api/getPermisInfo.php";
-        // -------------------------------------------------------------------
-        
         const loading = document.getElementById("loading");
         const content = document.getElementById("content");
         
@@ -276,7 +272,7 @@
             return;
         }
 
-        fetch(apiUrl + '?id=' + permisId)
+        fetch(`/api/verify?id=${encodeURIComponent(permisId)}`)
             .then(res => res.json())
             .then(data => {
                 if (data.success && data.permis) {
