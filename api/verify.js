@@ -1,3 +1,36 @@
+import https from "node:https";
+
+function requestPhp(url) {
+  return new Promise((resolve, reject) => {
+    const request = https.get(
+      url,
+      {
+        // Contournement TLS temporaire, limité à cet appel.
+        rejectUnauthorized: false,
+        headers: { Accept: "application/json" },
+      },
+      (response) => {
+        const chunks = [];
+
+        response.on("data", (chunk) => chunks.push(chunk));
+        response.on("end", () => {
+          resolve({
+            status: response.statusCode || 502,
+            contentType: String(response.headers["content-type"] || ""),
+            body: Buffer.concat(chunks).toString("utf8"),
+          });
+        });
+      }
+    );
+
+    request.setTimeout(10000, () => {
+      request.destroy(new Error("Délai dépassé vers l'API PHP"));
+    });
+
+    request.on("error", reject);
+  });
+}
+
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
 
@@ -18,28 +51,46 @@ export default async function handler(req, res) {
     });
   }
 
-  const apiUrl = new URL(
+  const url = new URL(
     "https://ci4cartesgrise.com/public/api/getPermisInfo.php"
   );
-  apiUrl.searchParams.set("id", id);
-
-  let upstream;
+  url.searchParams.set("id", id);
 
   try {
-    upstream = await fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-      cache: "no-store",
-      signal: AbortSignal.timeout(10000),
-    });
+    const upstream = await requestPhp(url);
+
+    if (!upstream.contentType.toLowerCase().includes("application/json")) {
+      console.error("API PHP non JSON", {
+        status: upstream.status,
+        contentType: upstream.contentType,
+      });
+
+      return res.status(502).json({
+        success: false,
+        error: "L'API PHP a renvoyé une réponse non JSON",
+      });
+    }
+
+    let data;
+
+    try {
+      data = JSON.parse(upstream.body);
+    } catch {
+      console.error("JSON invalide reçu de l'API PHP", {
+        status: upstream.status,
+      });
+
+      return res.status(502).json({
+        success: false,
+        error: "Réponse invalide de l'API PHP",
+      });
+    }
+
+    return res.status(upstream.status).json(data);
   } catch (error) {
     console.error("Échec de connexion à l'API PHP", {
-      name: error?.name,
       message: error?.message,
-      cause: error?.cause?.message,
-      code: error?.cause?.code,
+      code: error?.code,
     });
 
     return res.status(502).json({
@@ -47,52 +98,4 @@ export default async function handler(req, res) {
       error: "Impossible de joindre l'API PHP",
     });
   }
-
-  const contentType = upstream.headers.get("content-type") || "";
-  let body;
-
-  try {
-    body = await upstream.text();
-  } catch (error) {
-    console.error("Impossible de lire la réponse de l'API PHP", {
-      name: error?.name,
-      message: error?.message,
-    });
-
-    return res.status(502).json({
-      success: false,
-      error: "Impossible de lire la réponse de l'API PHP",
-    });
-  }
-
-  if (!contentType.toLowerCase().includes("application/json")) {
-    console.error("L'API PHP a répondu sans JSON", {
-      status: upstream.status,
-      contentType,
-      responseStart: body.slice(0, 100).replace(/\s+/g, " "),
-    });
-
-    return res.status(502).json({
-      success: false,
-      error: "L'API PHP a renvoyé une réponse non JSON",
-    });
-  }
-
-  let data;
-
-  try {
-    data = JSON.parse(body);
-  } catch (error) {
-    console.error("Réponse JSON invalide de l'API PHP", {
-      status: upstream.status,
-      message: error?.message,
-    });
-
-    return res.status(502).json({
-      success: false,
-      error: "Réponse JSON invalide de l'API PHP",
-    });
-  }
-
-  return res.status(upstream.status).json(data);
 }
