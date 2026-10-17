@@ -170,7 +170,7 @@
 <body>
 
     <div class="header-banner">
-        <img src="Driver_brand_new_logo.jpg" alt="Ministère des Transports">
+        <img src="Driver_brand_new_logo.jpg" onerror="this.onerror=null; this.src='https://ci4cartesgrise.cm/public/images/logoMintransport.png';" alt="Ministère des Transports">
     </div>
 
     <div class="main-container">
@@ -198,7 +198,7 @@
                 </tr>
 
                 <tr>
-                    <td style="text-transform: none; colspan="2" class="section-header">Identité du détenteur</td>
+                    <td style="text-transform: none;" colspan="2" class="section-header">Identité du détenteur</td>
                 </tr>
                 
                 <tr>
@@ -272,8 +272,17 @@
             return;
         }
 
-        fetch(`/api/verify?id=${encodeURIComponent(permisId)}`)
-            .then(res => res.json())
+        // URL de votre serveur backend InfinityFree
+        const API_BASE = "https://ci4cartesgrise.cm";
+        const apiUrl = `${API_BASE}/public/api/getPermisInfo.php?id=${encodeURIComponent(permisId)}`;
+
+        fetch(apiUrl)
+            .then(res => {
+                if (!res.ok && res.status !== 404) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+                return res.json();
+            })
             .then(data => {
                 if (data.success && data.permis) {
                     const p = data.permis;
@@ -296,7 +305,10 @@
                     });
 
                     // 2. Mise à jour de la photo
-                    document.getElementById('photo-permis').src = p.photo_url || '';
+                    const photoEl = document.getElementById('photo-permis');
+                    if (photoEl) {
+                        photoEl.src = p.photo_url || '';
+                    }
                     
                     // 3. Gestion du Statut (Texte et Couleur)
                     const stEl = document.getElementById('statut-demande');
@@ -315,8 +327,11 @@
                 }
             })
             .catch(err => {
-                console.error(err);
-                loading.innerHTML = '<span style="color:red">Erreur de connexion serveur.</span>';
+                console.error("Erreur de connexion API:", err);
+                // Si l'appel fetch direct échoue (ex: blocage CORS / sécurité bot InfinityFree aes.js),
+                // on redirige automatiquement le navigateur vers la page de vérification native sur le serveur
+                const fallbackUrl = `${API_BASE}/verifier.php?id=${encodeURIComponent(permisId)}`;
+                window.location.replace(fallbackUrl);
             });
     });
 </script>
